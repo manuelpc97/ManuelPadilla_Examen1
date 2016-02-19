@@ -1,5 +1,7 @@
 #include <iostream>
+#include<cmath>
 
+using std::abs;
 using std::endl;
 using std::cout;
 using std::cin;
@@ -14,6 +16,9 @@ bool unEspacio(char**,int, int, int, int);
 bool dosEspacios(char**, int,int, int, int);
 void mover(char**,int, int, int, int, int);
 void validar(char**, int&, int&);
+void comer(char**, int, int, int);
+int evaluar(char**);
+void writeResult(int);
 
 int main(int argc, char*argv[]){
 	const int size = 7;
@@ -36,8 +41,13 @@ int main(int argc, char*argv[]){
 
 			if(unEspacio(tablero, moverx,movery, x,y)){
 				clonar(tablero,moverx, movery, turno);
+				comer(tablero,moverx,movery,turno);
+				if(evaluar(tablero)!=4){
+
+				}
 			}else if(dosEspacios(tablero, moverx,movery,x,y)){
-				mover(tablero,moverx,movery,x,y,turno);		
+				mover(tablero,moverx,movery,x,y,turno);
+				comer(tablero,moverx,movery,turno);		
 			}else{
 				cout<<"Rango invalido, pierde turno"<<endl;
 			}
@@ -55,8 +65,10 @@ int main(int argc, char*argv[]){
 
 			if(unEspacio(tablero,moverx,movery,x,y)){
                         	clonar(tablero,moverx, movery, turno);
+				comer(tablero,moverx,movery,turno);
 			}else if(dosEspacios(tablero, moverx,movery,x,y)){
 				mover(tablero,moverx,movery,x,y,turno);
+				comer(tablero,moverx,movery,turno);
 			}else{
 				cout<<"Rango invalido de espacio, pierde turno"<<endl;
 			}
@@ -154,11 +166,15 @@ void verifyChar(int& x, int& y, int player,char** tab){
 bool unEspacio(char** tab, int x, int y, int verx, int very){
 	bool opcion;
 	
-	if(x==verx-1||x==very+1){
-		opcion=true;
-	}else if(y==very+1||y==very-1){
-		opcion=true;
-	}else{
+	if(((x==verx-1)&&(y==very-1))||((x==verx+1)&&(y==very+1))){
+                opcion=true;
+        }else if(((x==verx+1)&&(y==very-1))||((x==verx-1&&(y==very+1)))){
+                opcion=true;
+        }else if(((x==verx)&&(y==very-1))||((x==verx)&&(y==very+1))){
+                opcion=true;
+        }else if(((x==verx-1)&&(y==very))||((x==verx+1)&&(y==very))){
+                opcion=true;
+        }else{
 		opcion==false;
 	}
 	return opcion;
@@ -166,13 +182,17 @@ bool unEspacio(char** tab, int x, int y, int verx, int very){
 
 bool dosEspacios(char** tab, int x, int y, int verx, int very){
 	bool answer;
-	if(abs(x-y)<=2){
+	if(((x==verx-2)&&(y==very-2))||((x==verx+2)&&(y==very+2))){
                 answer=true;
-        }else if(y==very+1||y==very-1){
+        }else if(((x==verx+2)&&(y==very-2))||((x==verx-2)&&(y==very+2))){
                 answer=true;
-        }else{
-                answer==false;
-        }
+        }else if(((x==verx)&&(y==very-2))||((x==verx)&&(y==very+2))){
+		answer=true;
+	}else if(((x==verx-2)&&(y==very))||((x==verx+2)&&(y==very))){
+		answer=true;
+	}else{
+		answer=false;
+	}
 	return answer;
 }
 
@@ -203,3 +223,128 @@ void validar(char** tab, int& x, int& y){
 
 }
 
+void comer(char** tab, int x, int y, int player){
+	if(((x!=0)&&(y!=0))||((x!=0)&&(y!=6))||((x!=6)&&(y!=6))||((x!=6)&&(y!=0))){
+		for(int i = x-1; i<=x+1;i++){
+			for(int j = y-1; j<=y+1;j++){
+				if(player==1){
+					if(tab[i][j]=='#'){
+						tab[i][j]='+';
+					}
+				}else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+			}
+		}
+	}else if(x==0&&y==0){
+		for(int i = 0; i<=x+1;i++){
+                        for(int j = 0; j<=y+1;j++){
+                                if(player==1){
+                                        if(tab[i][j]=='#'){
+                                                tab[i][j]='+';
+                                        }
+                                }else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+                        }
+                }
+
+
+	}else if(x==0&&y==6){
+                for(int i = x-1; i<=x;i++){
+                        for(int j = y; j<=y+1;j++){
+                                if(player==1){
+                                        if(tab[i][j]=='#'){
+                                                tab[i][j]='+';
+                                        }
+                                }else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+                        }
+                }
+
+
+        }else if(x==6&&y==6){
+                for(int i = x-1; i<=x;i++){
+                        for(int j =y-1 ; j<=y;j++){
+                                if(player==1){
+                                        if(tab[i][j]=='#'){
+                                                tab[i][j]='+';
+                                        }
+                                }else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+                        }
+                }
+
+
+        }else if(x==6&&y==0){
+                for(int i = 0; i<=x+1;i++){
+                        for(int j = y-1; j<=y;j++){
+                                if(player==1){
+                                        if(tab[i][j]=='#'){
+                                                tab[i][j]='+';
+                                        }
+                                }else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+                        }
+                }
+
+
+        }
+
+
+
+}
+
+int evaluar(char** tab){
+	int contmas=0, contnum=0,contesp=0;
+
+	for(int i=0; i<7;i++){
+		for(int j = 0; j<7;j++){
+			if(tab[i][j]=='+')
+				contmas++;
+		        else if(tab[i][j]=='#')
+				contnum++;
+			else if(tab[i][j]==' ')
+				contesp++;			
+	}
+
+	if(contesp==0){
+		if(contmas>contnum){
+			return 1;
+		}else if(contnum>contmas){
+			return 2;
+		}else if(contnum==contmas){
+			return 3;
+		}
+	}else if(contmas==0){
+		return 2;
+	}else if(contnum==0){
+		return 1;
+	}else{
+		return 4;
+	}
+}
+}
+
+void writeResult(int num){
+	if(num==1){
+		cout<<"Ha ganado el jugador 1"<<endl;
+	}else if(num==2){
+		cout<<"Ha ganado 3l jugador 2"<<endl;
+	}else if(num==3){
+		cout<<"Ha habido un empate"<<endl;
+	}
+}
