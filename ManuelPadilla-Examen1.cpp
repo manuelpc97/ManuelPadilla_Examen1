@@ -19,6 +19,7 @@ void validar(char**, int&, int&);
 void comer(char**, int, int, int);
 int evaluar(char**);
 void writeResult(int);
+void borrar(char**);
 
 int main(int argc, char*argv[]){
 	const int size = 7;
@@ -43,6 +44,7 @@ int main(int argc, char*argv[]){
 				clonar(tablero,moverx, movery, turno);
 				comer(tablero,moverx,movery,turno);
 				if(evaluar(tablero)!=4){
+					mostrarTablero(tablero,size);
 					writeResult(evaluar(tablero));
 					jugar=false;
 				}
@@ -50,6 +52,7 @@ int main(int argc, char*argv[]){
 				mover(tablero,moverx,movery,x,y,turno);
 				comer(tablero,moverx,movery,turno);
 				if(evaluar(tablero)!=4){
+					mostrarTablero(tablero,size);
                                         writeResult(evaluar(tablero));
                                         jugar=false;
                                 }
@@ -73,6 +76,7 @@ int main(int argc, char*argv[]){
                         	clonar(tablero,moverx, movery, turno);
 				comer(tablero,moverx,movery,turno);
 				if(evaluar(tablero)!=4){
+					mostrarTablero(tablero,size);
                                         writeResult(evaluar(tablero));
                                         jugar=false;
                                 }
@@ -81,6 +85,7 @@ int main(int argc, char*argv[]){
 				mover(tablero,moverx,movery,x,y,turno);
 				comer(tablero,moverx,movery,turno);
 				if(evaluar(tablero)!=4){
+					mostrarTablero(tablero,size);
                                         writeResult(evaluar(tablero));
                                         jugar=false;
                                 }
@@ -92,6 +97,7 @@ int main(int argc, char*argv[]){
 
 		}
 	}
+	borrar(tablero);
 	return 0;
 }
 
@@ -103,6 +109,13 @@ char** declararTablero(int num){
 	}
 
 	return h;
+}
+
+void borrar(char** tab){
+	for(int i=0; i<7;i++){
+		delete[] tab[i];
+	}
+	delete[] tab;
 }
 
 void llenarTablero(char** tab, int num){
@@ -119,7 +132,11 @@ void llenarTablero(char** tab, int num){
 		
 	
 void mostrarTablero(char** tab, int num){
+	int contador=0;
+	cout<<"  0  1  2  3  4  5  6"<<endl;
 	for(int i = 0; i<num;i++){
+		cout<<contador;
+		contador++;
 		for(int j = 0; j<num; j++){
 			cout<<"["<<tab[i][j]<<"]";
 		}
@@ -241,6 +258,7 @@ void validar(char** tab, int& x, int& y){
 
 void comer(char** tab, int x, int y, int player){
 	if(((x!=0)&&(y!=0))||((x!=0)&&(y!=6))||((x!=6)&&(y!=6))||((x!=6)&&(y!=0))){
+
 		for(int i = x-1; i<=x+1;i++){
 			for(int j = y-1; j<=y+1;j++){
 				if(player==1){
@@ -271,7 +289,7 @@ void comer(char** tab, int x, int y, int player){
 
 
 	}else if(x==0&&y==6){
-                for(int i = x-1; i<=x;i++){
+                for(int i = x; i<=x+1;i++){
                         for(int j = y; j<=y+1;j++){
                                 if(player==1){
                                         if(tab[i][j]=='#'){
@@ -318,8 +336,23 @@ void comer(char** tab, int x, int y, int player){
                 }
 
 
-        }
+        }else if((x==0&&(y>0||y<6))){
+                for(int i = x; i<=x+1;i++){
+                        for(int j = 0; j<=y+1;j++){
+                                if(player==1){
+                                        if(tab[i][j]=='#'){
+                                                tab[i][j]='+';
+                                        }
+                                }else if(player==2){
+                                        if(tab[i][j]=='+'){
+                                                tab[i][j]='#';
+                                        }
+                                }
+                        }
+                }
 
+
+        }
 
 
 }
@@ -336,6 +369,7 @@ int evaluar(char** tab){
 			else if(tab[i][j]==' ')
 				contesp++;			
 	}
+}
 
 	if(contesp==0){
 		if(contmas>contnum){
@@ -352,7 +386,7 @@ int evaluar(char** tab){
 	}else{
 		return 4;
 	}
-}
+
 }
 
 void writeResult(int num){
