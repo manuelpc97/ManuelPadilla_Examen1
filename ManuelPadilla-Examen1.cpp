@@ -43,11 +43,17 @@ int main(int argc, char*argv[]){
 				clonar(tablero,moverx, movery, turno);
 				comer(tablero,moverx,movery,turno);
 				if(evaluar(tablero)!=4){
-
+					writeResult(evaluar(tablero));
+					jugar=false;
 				}
 			}else if(dosEspacios(tablero, moverx,movery,x,y)){
 				mover(tablero,moverx,movery,x,y,turno);
-				comer(tablero,moverx,movery,turno);		
+				comer(tablero,moverx,movery,turno);
+				if(evaluar(tablero)!=4){
+                                        writeResult(evaluar(tablero));
+                                        jugar=false;
+                                }
+		
 			}else{
 				cout<<"Rango invalido, pierde turno"<<endl;
 			}
@@ -66,9 +72,19 @@ int main(int argc, char*argv[]){
 			if(unEspacio(tablero,moverx,movery,x,y)){
                         	clonar(tablero,moverx, movery, turno);
 				comer(tablero,moverx,movery,turno);
+				if(evaluar(tablero)!=4){
+                                        writeResult(evaluar(tablero));
+                                        jugar=false;
+                                }
+
 			}else if(dosEspacios(tablero, moverx,movery,x,y)){
 				mover(tablero,moverx,movery,x,y,turno);
 				comer(tablero,moverx,movery,turno);
+				if(evaluar(tablero)!=4){
+                                        writeResult(evaluar(tablero));
+                                        jugar=false;
+                                }
+
 			}else{
 				cout<<"Rango invalido de espacio, pierde turno"<<endl;
 			}
